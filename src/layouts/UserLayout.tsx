@@ -1,7 +1,7 @@
-import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@/layouts/node_modules/@ant-design/pro-layout';
+import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Link, SelectLang, useIntl, ConnectProps, connect } from '@/layouts/node_modules/umi';
-import React from '@/layouts/node_modules/react';
+import { Link, SelectLang, useIntl, ConnectProps, connect } from 'umi';
+import React from 'react';
 import { ConnectState } from '@/models/connect';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';

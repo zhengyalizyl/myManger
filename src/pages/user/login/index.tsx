@@ -64,8 +64,9 @@ const Login: React.FC<LoginProps> = (props) => {
       <div className={styles.loginWrap}>
         <img src={login} className={styles.loginImg} />
       </div>
-      {showMsg && <LoginMessage type={showMsg} content={contentMsg} />}
+    
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
+      {showMsg && <LoginMessage type={showMsg} content={contentMsg} />}
         <UserName
           name="userName"
           placeholder="用户名: admin or user"

@@ -1,9 +1,3 @@
-import {
-  AlipayCircleOutlined,
-  TaobaoCircleOutlined,
-  WeiboCircleOutlined,
-  WhatsAppOutlined,
-} from '@ant-design/icons';
 import { Alert, Checkbox, notification, AlertType } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { Link, connect, Dispatch } from 'umi';
@@ -14,7 +8,6 @@ import LoginForm from './components/Login';
 
 import styles from './style.less';
 import login from '../../../assets/imgs/login.jpg';
-import { string } from 'prop-types';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginForm;
 interface LoginProps {
@@ -49,7 +42,12 @@ const Login: React.FC<LoginProps> = (props) => {
       payload: { ...values, type },
     });
   };
-
+  
+  useEffect(()=>{
+    return ()=>{
+      console.log('zujianxiezai============')
+    }
+  },[])
   let showMsg;
   let contentMsg = '';
   if (status === 'error' && loginType === 'account' && !submitting) {
@@ -58,15 +56,18 @@ const Login: React.FC<LoginProps> = (props) => {
   } else if (status === 'ok' && loginType === 'account' && !submitting) {
     showMsg = 'success';
     contentMsg = '登录成功，正在跳转到别的页面';
+  }else{
+    showMsg=''
   }
   return (
     <div className={styles.main}>
       <div className={styles.loginWrap}>
         <img src={login} className={styles.loginImg} />
       </div>
-    
-      <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
+    <div className={styles.padding100}>
       {showMsg && <LoginMessage type={showMsg} content={contentMsg} />}
+      </div>
+      <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <UserName
           name="userName"
           placeholder="用户名: admin or user"
@@ -87,7 +88,6 @@ const Login: React.FC<LoginProps> = (props) => {
             },
           ]}
         />
-
         <Submit loading={submitting}>登录</Submit>
       </LoginForm>
     </div>

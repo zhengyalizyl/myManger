@@ -17,7 +17,8 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getMatchMenu } from '@umijs/route-utils';
-import logo from '../assets/logo.svg';
+import logo from '../assets/imgs/login.jpg';
+import styles from "./BasicLayout.less";
 
 const noMatch = (
   <Result
@@ -105,10 +106,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
 
   return (
     <ProLayout
-      logo={logo}
       formatMessage={formatMessage}
       onCollapse={handleMenuCollapse}
-      onMenuHeaderClick={() => history.push('/')}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
@@ -138,6 +137,19 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       }}
       {...props}
       {...settings}
+      logo={logo}
+      title="zytl2"
+      menuHeaderRender={(logo, title) => (
+        <div
+        className={styles.profile}
+          onClick={() => {
+            history.push('/')
+          }}
+        >
+          <div className={styles.avata}>{logo}</div>
+          <div>{title}</div>
+        </div>
+      )}
     >
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         {children}

@@ -58,7 +58,7 @@ const Model: LoginModelType = {
       }
     },
 
-    logout() {
+    *logout(a,{put}) {
       const { redirect } = getPageQuery();
       // Note: There may be security issues, please note
       if (window.location.pathname !== '/user/login' && !redirect) {
@@ -68,11 +68,21 @@ const Model: LoginModelType = {
             redirect: window.location.href,
           }),
         });
+          yield put({
+            type:'changeloginOut'
+          })
       }
     },
   },
 
   reducers: {
+    changeloginOut(state){
+      return {
+        ...state,
+        status: undefined,
+        type: '',
+      }
+    },
     changeLoginStatus(state, { payload }) {
       setAuthority(payload.currentAuthority);
       return {

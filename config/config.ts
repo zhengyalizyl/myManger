@@ -46,13 +46,13 @@ export default defineConfig({
   // umi routes: https://umijs.org/docs/routing
   routes: [
     {
-      path: '/user',
+      path: '/login',
       component: '../layouts/UserLayout',
       routes: [
         {
           name: 'login',
-          path: '/user/login',
-          component: './user/login',
+          path: '/login',
+          component: './login',
         },
       ],
     },
@@ -74,6 +74,30 @@ export default defineConfig({
               name: 'home',
               icon: 'smile',
               component: './Home',
+            },
+            {
+            path:'/user',
+            name:'用户管理',
+            icon:'user',
+            // component:'./user/list',
+            routes:[
+              // {
+              //   paht:'/user',
+              //   redirect:'/user/list'
+              // },
+              {
+                path:'/user/list',
+                name:'用户列表',
+                icon:'user',
+                component:'./user/list'
+              },
+              {
+                path:'/user/center',
+                name:'用户信息',
+                icon:'user',
+                component:'./user/center'
+              }
+            ]
             },
             {
               path: '/admin',

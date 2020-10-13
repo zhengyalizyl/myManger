@@ -7,7 +7,7 @@ import { ConnectState } from '@/models/connect';
 import LoginForm from './components/Login';
 
 import styles from './style.less';
-import login from '../../../assets/imgs/login.jpg';
+import login from '../../assets/imgs/login.jpg';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginForm;
 interface LoginProps {

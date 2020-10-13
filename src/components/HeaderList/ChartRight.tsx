@@ -40,6 +40,7 @@ const ChartRight: React.FC<ChartRightProps> = (props) => {
         <Coordinate type="theta" radius={0.8} innerRadius={0.2}/>
         <Tooltip showTitle={false} />
         <Axis visible={false} />
+     
         <Interval
           position="order"
           adjust="stack"

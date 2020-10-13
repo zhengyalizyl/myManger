@@ -2,7 +2,11 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
+const path=require('path')
 const { REACT_APP_ENV } = process.env;
+function resolve(dir:string){
+  return path.join(__dirname,dir)
+}
 export default defineConfig({
   hash: true,
   antd: {},
@@ -22,6 +26,23 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
+  chainWebpack(config){
+   config.module
+   .rule('svg')
+   .exclude.add(/pages/)
+   .end()// 给内置的添加 exclude，这里根据自己的情况处理
+
+   config.module
+   .rule('svgr')
+   .test(/\.svg(\?v=\d+\.\d+\.\d+)?$/)
+   .include.add(/pages/)
+   .end()// include 指定需要直接 svgr 的情况
+   .use('@svgr/webpack')
+   .loader(require.resolve('@svgr/webpack'))
+   .end()
+  },
+
+
   // umi routes: https://umijs.org/docs/routing
   routes: [
     {

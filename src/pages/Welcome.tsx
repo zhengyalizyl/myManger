@@ -1,7 +1,8 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Alert, Typography } from 'antd';
+import { Card, Alert, Typography,Row,Col } from 'antd';
 import styles from './Welcome.less';
+
 
 const CodePreview: React.FC<{}> = ({ children }) => (
   <pre className={styles.pre}>
@@ -13,7 +14,8 @@ const CodePreview: React.FC<{}> = ({ children }) => (
 
 export default (): React.ReactNode => (
   <PageContainer>
-    <Card>
+  
+    {/* <Card>
       <Alert
         message="更快更强的重型组件，已经发布。"
         type="success"
@@ -43,6 +45,6 @@ export default (): React.ReactNode => (
         </a>
       </Typography.Text>
       <CodePreview>yarn add @ant-design/pro-layout</CodePreview>
-    </Card>
+    </Card> */}
   </PageContainer>
 );

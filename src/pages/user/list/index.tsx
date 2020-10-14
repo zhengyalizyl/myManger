@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Table, Button, Input } from 'antd';
 import UserSelcect from '../../../components/User/Select';
+import { history,withRouter } from 'umi';
 import styles from './index.less';
 
 interface UserListProps {}
@@ -50,10 +51,19 @@ const columns = [
   {
     title: '操作时间',
     dataIndex: 'operation',
-    render: () => (<>
-    <a>查看</a>
-    <a>锁定</a>
-    </>),
+    render: () => (
+      <>
+      <Button type="link" onClick={()=>{
+       history.push({
+         pathname: '/user/center',
+         query:{
+           id:1
+         }
+       })
+      }}>查看</Button>
+        <Button type='link'>锁定</Button>
+      </>
+    ),
   },
 ];
 
@@ -76,10 +86,19 @@ for (let i = 0; i < 46; i++) {
 
 const { Search } = Input;
 const UserList: React.FC<UserListProps> = (props) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
   return (
     <PageHeaderWrapper>
-      <div className={ `${styles.flex} ${styles.margin40}`}>
-        <div  className={styles.flex}>
+      <div className={`${styles.flex} ${styles.margin40}`}>
+        <div className={styles.flex}>
           <UserSelcect defaultValue="按年龄" />
           <UserSelcect defaultValue="按性别" />
           <UserSelcect defaultValue="按地区" />
@@ -94,9 +113,9 @@ const UserList: React.FC<UserListProps> = (props) => {
           />
         </div>
       </div>
-      <Table columns={columns} dataSource={data} bordered />
+      <Table columns={columns} dataSource={data} bordered loading={loading} />
     </PageHeaderWrapper>
   );
 };
 
-export default UserList;
+export default withRouter(UserList);

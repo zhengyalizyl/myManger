@@ -1,6 +1,9 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Table, Button, Input, Avatar, List,Tabs } from 'antd';
+import { Table, Button, Input, Avatar, List, Tabs } from 'antd';
+import Profile from '../../../components/User/Profile';
+import { history,withRouter } from 'umi';
+import styles from './index.less';
 
 interface UserCenterProps {}
 const { TabPane } = Tabs;
@@ -17,6 +20,12 @@ const data = [
   {
     title: 'Ant Design Title 4',
   },
+  {
+    title: 'Ant Design Title 5',
+  },
+  {
+    title: 'Ant Design Title 6',
+  },
 ];
 
 function callback(key) {
@@ -27,47 +36,79 @@ const UserCenter: React.FC<UserCenterProps> = (props) => {
   return (
     <div>
       <PageHeaderWrapper>
+        <Profile />
         <div>
-          <div>
-            <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-            <div>
-              <h3>zyl学院</h3>
-              <span>喜欢IT, 就上来课！</span>
-            </div>
-          </div>
-          <div>
           <Tabs defaultActiveKey="1" onChange={callback}>
-    <TabPane tab="Tab 1" key="1">
-      Content of Tab Pane 1
-    </TabPane>
-    <TabPane tab="Tab 2" key="2">
-      Content of Tab Pane 2
-    </TabPane>
-    <TabPane tab="Tab 3" key="3">
-      Content of Tab Pane 3
-    </TabPane>
-  </Tabs>
-
-          </div>
-        </div>
-        <div>12133</div>
-
-        <div>
-          <List
-            itemLayout="horizontal"
-            dataSource={data}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                  }
-                  title={<a href="https://ant.design">{item.title}</a>}
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                />
-              </List.Item>
-            )}
-          />
+            <TabPane tab="全部" key="1">
+              <List
+                pagination={{
+                  onChange: (page) => {
+                    console.log(page);
+                  },
+                  pageSize: 5,
+                }}
+                itemLayout="horizontal"
+                dataSource={data}
+                renderItem={(item) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                      }
+                      title={<a href="https://ant.design">{item.title}</a>}
+                      description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    />
+                  </List.Item>
+                )}
+              />
+            </TabPane>
+            <TabPane tab="在学" key="2">
+              <List
+                pagination={{
+                  onChange: (page) => {
+                    console.log(page);
+                  },
+                  pageSize: 5,
+                }}
+                itemLayout="horizontal"
+                dataSource={data}
+                renderItem={(item) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                      }
+                      title={<a href="https://ant.design">{item.title}</a>}
+                      description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    />
+                  </List.Item>
+                )}
+              />
+            </TabPane>
+            <TabPane tab="完成" key="3">
+              <List
+                pagination={{
+                  onChange: (page) => {
+                    console.log(page);
+                  },
+                  pageSize: 5,
+                }}
+                itemLayout="horizontal"
+                dataSource={data}
+                renderItem={(item) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                      }
+                      title={<a href="https://ant.design">{item.title}</a>}
+                      description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                    />
+                  </List.Item>
+                )}
+              />
+            </TabPane>
+          </Tabs>
           ,
         </div>
       </PageHeaderWrapper>
@@ -75,4 +116,4 @@ const UserCenter: React.FC<UserCenterProps> = (props) => {
   );
 };
 
-export default UserCenter;
+export default withRouter(UserCenter);

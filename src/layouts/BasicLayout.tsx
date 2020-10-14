@@ -18,7 +18,7 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/imgs/login.jpg';
-import styles from "./BasicLayout.less";
+import styles from './BasicLayout.less';
 
 const noMatch = (
   <Result
@@ -27,7 +27,7 @@ const noMatch = (
     subTitle="Sorry, you are not authorized to access this page."
     extra={
       <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+        <Link to="/login">Go Login</Link>
       </Button>
     }
   />
@@ -59,8 +59,6 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
     };
     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
   });
-
-
 
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   const {
@@ -141,9 +139,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       title="zytl2"
       menuHeaderRender={(logo, title) => (
         <div
-        className={styles.profile}
+          className={styles.profile}
           onClick={() => {
-            history.push('/')
+            history.push('/');
           }}
         >
           <div className={styles.avata}>{logo}</div>

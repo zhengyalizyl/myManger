@@ -2,10 +2,10 @@
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-const path=require('path')
+const path = require('path');
 const { REACT_APP_ENV } = process.env;
-function resolve(dir:string){
-  return path.join(__dirname,dir)
+function resolve(dir: string) {
+  return path.join(__dirname, dir);
 }
 export default defineConfig({
   hash: true,
@@ -26,22 +26,18 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
-  chainWebpack(config){
-   config.module
-   .rule('svg')
-   .exclude.add(/pages/)
-   .end()// 给内置的添加 exclude，这里根据自己的情况处理
+  chainWebpack(config) {
+    config.module.rule('svg').exclude.add(/pages/).end(); // 给内置的添加 exclude，这里根据自己的情况处理
 
-   config.module
-   .rule('svgr')
-   .test(/\.svg(\?v=\d+\.\d+\.\d+)?$/)
-   .include.add(/pages/)
-   .end()// include 指定需要直接 svgr 的情况
-   .use('@svgr/webpack')
-   .loader(require.resolve('@svgr/webpack'))
-   .end()
+    config.module
+      .rule('svgr')
+      .test(/\.svg(\?v=\d+\.\d+\.\d+)?$/)
+      .include.add(/pages/)
+      .end() // include 指定需要直接 svgr 的情况
+      .use('@svgr/webpack')
+      .loader(require.resolve('@svgr/webpack'))
+      .end();
   },
-
 
   // umi routes: https://umijs.org/docs/routing
   routes: [
@@ -76,32 +72,34 @@ export default defineConfig({
               component: './Home',
             },
             {
-            path:'/user',
-            name:'用户管理',
-            icon:'user',
-            // component:'./user/list',
-            routes:[
-              // {
-              //   paht:'/user',
-              //   redirect:'/user/list'
-              // },
-              {
-                path:'/user/list',
-                name:'用户列表',
-                icon:'user',
-                component:'./user/list'
-              },
-              {
-                path:'/user/center',
-                name:'用户信息',
-                icon:'user',
-                component:'./user/center'
-              }
-            ]
+
+              path: '/user',
+              name: '用户管理',
+              icon: 'user',
+              routes: [
+                {
+                  exact: true,
+                  path: '/user',
+                  redirect: '/user/list',
+                },
+                {
+                  path: '/user/list',
+                  name: '用户列表',
+                  icon: 'user',
+                  component: './user/list',
+                },
+                {
+                  hideInMenu: true,
+                  path: '/user/center',
+                  name: '用户信息',
+                  icon: 'user',
+                  component: './user/center',
+                },
+              ],
             },
             {
               path: '/admin',
-              name: 'admin',
+              name: '管理员',
               icon: 'crown',
               component: './Admin',
               authority: ['admin'],

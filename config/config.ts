@@ -97,59 +97,65 @@ export default defineConfig({
                 },
               ],
             },
-            // {
-            //   path:'/course',
-            //   name:'课程管理',
-            //   icon:'table',
-            //   routes: [
-            //     {
-            //       exact: true,
-            //       path: '/course',
-            //       redirect: '/course/list',
-            //     },
-            //     {
-            //       path: '/course/add',
-            //       name: '课程添加',
-            //       icon: 'user',
-            //       component: './course/add',
-            //     },
-            //     {
-            //       path: '/course/add',
-            //       name: '课程添加',
-            //       icon: 'user',
-            //       component: './course/add',
-            //     },
-            //     {
-            //       hideInMenu: true,
-            //       path: '/course/add_one',
-            //       name: '课程添加',
-            //       icon: 'user',
-            //       component: './course/add/one',
-            //     },
-            //     {
-            //       hideInMenu: true,
-            //       path: '/course/add_two',
-            //       name: '课程添加',
-            //       icon: 'user',
-            //       component: './course/add/two',
-            //     },
-            //     {
-            //       hideInMenu: true,
-            //       path: '/course/add_three',
-            //       name: '课程添加',
-            //       icon: 'user',
-            //       component: './course/add/three',
-            //     },
-            //     {
-            //       path: '/course/list',
-            //       name: '课程列表',
-            //       icon: 'table',
-            //       component: './course/list',
-            //     },
+            {
+              path:'/course',
+              name:'课程管理',
+              icon:'table',
+              routes: [
+                {
+                  exact: true,
+                  path: '/course',
+                  redirect: '/course/list',
+                },
+                {
+                  path: '/course/add',
+                  name: '课程添加',
+                  icon: 'user',
+                  component: './course/add',
+                },
+                {
+                  hideInMenu: true,
+                  path: '/course/add_one',
+                  name: '课程添加',
+                  icon: 'user',
+                  component: './course/add/one',
+                },
+                {
+                  hideInMenu: true,
+                  path: '/course/add_two',
+                  name: '课程添加',
+                  icon: 'user',
+                  component: './course/add/two',
+                },
+                {
+                  hideInMenu: true,
+                  path: '/course/add_three',
+                  name: '课程添加',
+                  icon: 'user',
+                  component: './course/add/three',
+                },
+                {
+                  path: '/course/list',
+                  name: '课程列表',
+                  icon: 'table',
+                  component: './course/index',
+                },
+                {
+                  path: '/course/category',
+                  name: '课程分类',
+                  icon: 'table',
+                  component: './course/category',
+                },
+                {
+                  path: '/course/topic',
+                  name: '课程专题',
+                  icon: 'table',
+                  component: './course/topic',
+                },
                
-            //   ],
+              ],
 
-            // },
+            },
             {
               path: '/admin',
               name: '管理员',

@@ -100,7 +100,7 @@ export default defineConfig({
             {
               path:'/course',
               name:'课程管理',
-              icon:'table',
+              icon:'icon-37',
               routes: [
                 {
                   exact: true,
@@ -118,21 +118,21 @@ export default defineConfig({
                   path: '/course/add_one',
                   name: '课程添加',
                   icon: 'user',
-                  component: './course/add/one',
+                  component: './course/add/One',
                 },
                 {
                   hideInMenu: true,
                   path: '/course/add_two',
                   name: '课程添加',
                   icon: 'user',
-                  component: './course/add/two',
+                  component: './course/add/Two',
                 },
                 {
                   hideInMenu: true,
                   path: '/course/add_three',
                   name: '课程添加',
                   icon: 'user',
-                  component: './course/add/three',
+                  component: './course/add/Three',
                 },
                 {
                   path: '/course/list',

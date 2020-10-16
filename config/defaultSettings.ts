@@ -18,7 +18,7 @@ const proSettings: DefaultSettings = {
   },
   title: '管理后台系统',
   pwa: false,
-  iconfontUrl: '',
+  iconfontUrl: '//at.alicdn.com/t/font_1475513_4mx81hz4f4f.js',
 };
 
 export type { DefaultSettings };

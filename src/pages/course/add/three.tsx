@@ -35,7 +35,7 @@ const CourseOne: React.FC<CourseOneProps> = (props) => {
           <CourseLeft stepNumber={2}/>
         </div>
         <div style={{ flex: 'auto' }}>
-          <p>课程信息</p>
+          <p>课时管理</p>
           <Divider />
           <Form {...layout} name="basic" onFinish={onFinish} onFinishFailed={onFinishFailed}>
             <Form.Item

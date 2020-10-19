@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Avatar, Tabs, Form, Input, Button, Divider, Select, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, PlusOutlined,LoadingOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import CourseTop from './Top';
 import CourseLeft from './Left';
@@ -15,6 +15,13 @@ const tailLayout = {
   wrapperCol: { offset: 18, span: 6 },
 };
 const { TextArea } = Input;
+
+const uploadButton = (
+  <div className={styles.previewIcon}>
+     <PlusOutlined />
+    <div style={{ marginTop: 8 }}>Upload</div>
+  </div>
+);
 const CourseTwo: React.FC<CourseOneProps> = (props) => {
   const [current, setCurrent] = useState(0);
   const onFinish = (values: any) => {
@@ -48,14 +55,17 @@ const CourseTwo: React.FC<CourseOneProps> = (props) => {
                     '可上传jpg, gif, png格式文件, 图片建议尺寸大于400x225，文件大小不能超过2M。',
                 },
               ]}
+              help='可上传jpg, gif, png格式文件, 图片建议尺寸大于400x225，文件大小不能超过2M。'
             >
               <Upload
-                className="avatar-uploader"
-                name="logo"
+                className={styles.preview}
+                name="picture"
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture"
+                listType="picture-card"
               >
-                <Button icon={<UploadOutlined />}>Click to upload</Button>
+             
+                 { uploadButton}
+
               </Upload>
             </Form.Item>
             <Form.Item {...tailLayout}>

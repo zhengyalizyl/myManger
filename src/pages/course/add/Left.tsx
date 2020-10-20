@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import {Avatar,Tabs,Form,Input,Button,Steps } from 'antd';
 import styles from "./one.less";
+import { history } from "umi";
 interface CourseTopProps{
   stepNumber:number
 }

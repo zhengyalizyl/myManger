@@ -4,7 +4,6 @@ interface CategoryEditProps {}
 
 
 const CategoryEdit: React.FC<CategoryEditProps> = (props) => {
-
   return (
     <div>
      <CategoryForm/>

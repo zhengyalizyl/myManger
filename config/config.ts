@@ -148,6 +148,13 @@ export default defineConfig({
                 },
                 {
                   hideInMenu: true,
+                  path: '/course/category_add',
+                  name: '课程编辑',
+                  icon: 'table',
+                  component: './course/category/Add',
+                },
+                {
+                  hideInMenu: true,
                   path: '/course/category_edit',
                   name: '课程编辑',
                   icon: 'table',

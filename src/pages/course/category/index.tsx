@@ -30,7 +30,7 @@ const columns = [
       <>
       <Button type="link" onClick={()=>{
        history.push({
-         pathname: '/user/center',
+         pathname: '/course/category_edit',
          query:{
            id:1
          }

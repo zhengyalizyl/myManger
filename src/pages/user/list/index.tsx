@@ -67,7 +67,7 @@ const columns = [
   },
 ];
 
-const data = [];
+const data :any= [];
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,

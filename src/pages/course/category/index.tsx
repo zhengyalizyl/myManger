@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Table, Button, Input } from 'antd';
+import { Table, Button, Input, Divider } from 'antd';
 import { history,withRouter } from 'umi';
 import styles from './index.less';
 
@@ -8,44 +8,20 @@ interface CategoryListProps {}
 
 const columns = [
   {
-    title: '编号',
-    dataIndex: 'No',
+    title: '分类名称',
+    dataIndex: 'main_title',
   },
   {
-    title: '注册账号',
-    dataIndex: 'regAccount',
+    title: '课程数量',
+    dataIndex: 'main_total_count',
   },
   {
-    title: '昵称',
-    dataIndex: 'userNick',
+    title: '是否显示',
+    dataIndex: 'main_is_show',
   },
   {
-    title: '年龄',
-    dataIndex: 'age',
-  },
-  {
-    title: '性别',
-    dataIndex: 'sex',
-  },
-  {
-    title: '地区',
-    dataIndex: 'region',
-  },
-  {
-    title: '手机号码',
-    dataIndex: 'phone',
-  },
-  {
-    title: '积分',
-    dataIndex: 'point',
-  },
-  {
-    title: '注册时间',
-    dataIndex: 'registerTime',
-  },
-  {
-    title: '登录时间',
-    dataIndex: 'loginTime',
+    title: '排序',
+    dataIndex: 'main_sort',
   },
   {
     title: '操作时间',
@@ -59,27 +35,30 @@ const columns = [
            id:1
          }
        })
-      }}>查看</Button>
-        <Button type='link'>锁定</Button>
+      }}>编辑</Button>
+      
       </>
     ),
   },
 ];
 
-const data = [];
-for (let i = 0; i < 46; i++) {
+const data:any = [];
+for (let i = 0; i < 12; i++) {
   data.push({
     key: i,
-    No: i + 1,
-    regAccount: i + '@itlike.com',
-    userNick: 'haha' + i,
-    age: 32,
-    sex: '男',
-    region: '天津',
-    phone: 15369859836,
-    point: 12 + i,
-    registerTime: new Date().toDateString(),
-    loginTime: new Date().toDateString(),
+    main_sort:'1',
+    main_total_count:2,
+    main_title:'web前端',
+    main_is_show:'1',
+    chidren:[
+      {
+      key: i+1,
+      main_sort:'1',
+      main_total_count:2,
+      main_title:'12',
+      main_is_show:'1',
+    }
+  ]
   });
 }
 
@@ -100,12 +79,17 @@ const CategoryList: React.FC<CategoryListProps> = (props) => {
         <div className={styles.flex}>
         </div>
         <div>
-        
+          <Button type="primary" onClick={()=>{
+            history.push({
+              pathname:'/course/category_edit'
+            })
+          }}>添加分类</Button>
         </div>
       </div>
+      <Divider/>
       <Table columns={columns} dataSource={data} bordered loading={loading} />
     </PageHeaderWrapper>
   );
 };
 
-export default withRouter(CategoryList);
+export default CategoryList;

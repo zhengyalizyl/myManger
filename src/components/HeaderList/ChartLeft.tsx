@@ -1,11 +1,12 @@
-import { Row, Col } from 'antd';
-import Users from '../../pages/imgs/svg/users.svg';
-import Icon from '@ant-design/icons';
 
-import { Chart, Axis, Tooltip, Geom, Interval, useTheme, registerTheme } from 'bizcharts';
+
 import React, { useRef } from 'react';
+import { HomeModelState} from "@/models/home";
+import { Chart, Axis, Tooltip, Geom, Interval, useTheme, registerTheme } from 'bizcharts';
 
-export interface ChartLeftProps {}
+export interface ChartLeftProps {
+  
+}
 
 // 注册自己的主题
 registerTheme('my-theme', {
@@ -22,14 +23,17 @@ registerTheme('my-theme', {
   },
 });
 
-const ChartLeft: React.FC<ChartLeftProps> = (props) => {
-  const {} = props;
+const ChartLeft: React.FC<HomeModelState> = (props) => {
+  const {homeList}=props;
+  const {order_counter}=homeList||{order_counter:{}};
+  const {web,java,python,bigdata,ui}=order_counter||{web:0,java:0,python:0,bigdata:0,ui:0};
+ 
   const data = [
-    { orderName: 'web', order: 38 },
-    { orderName: 'java', order: 52 },
-    { orderName: 'phthon', order: 61 },
-    { orderName: 'bigdata', order: 45 },
-    { orderName: 'ui', order: 48 },
+    { orderName: 'web', order: Number(web) },
+    { orderName: 'java', order: Number(java) },
+    { orderName: 'python', order:Number(python) },
+    { orderName: 'bigdata', order:Number(bigdata) },
+    { orderName: 'ui', order:Number(ui) },
   ];
   const [theme, setTheme] = useTheme('my-theme');
   return (

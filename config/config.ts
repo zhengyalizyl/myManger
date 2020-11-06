@@ -171,6 +171,38 @@ export default defineConfig({
 
             },
             {
+              path: '/docent',
+              name: '运营中心',
+              icon: 'icon-bars',
+              routes: [
+                {
+                  exact: true,
+                  path: '/docent',
+                  redirect: '/docent/list',
+                },
+                {
+                  path: '/docent/list',
+                  name: '运营列表',
+                  icon: 'user',
+                  component: './docent/List',
+                },
+                {
+                  hideInMenu: true,
+                  path: '/docent/add',
+                  name: '运营列表',
+                  icon: 'user',
+                  component: './docent/Add',
+                },
+                {
+                  hideInMenu: true,
+                  path: '/docent/edit',
+                  name: '运营列表',
+                  icon: 'user',
+                  component: './docent/Edit',
+                },
+              ],
+            },
+            {
               path: '/admin',
               name: '管理员',
               icon: 'crown',

@@ -38,8 +38,10 @@ const Model: LoginModelType = {
         payload: response,
       });
       // Login successfully
-      if (response.status_code === 'ok') {
+      if (response.status_code === 200) {
         const urlParams = new URL(window.location.href);
+        const token=response.result.token;
+        window.localStorage.setItem('zylManagerToken',token)
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
         if (redirect) {
@@ -80,15 +82,14 @@ const Model: LoginModelType = {
       return {
         ...state,
         status: undefined,
-        type: '',
       }
     },
     changeLoginStatus(state, { payload }) {
       setAuthority(payload.currentAuthority);
+
       return {
         ...state,
-        status: payload.status,
-        type: payload.type,
+        status: payload.successfull?'ok':'error',
       };
     },
   },

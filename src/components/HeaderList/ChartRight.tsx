@@ -21,18 +21,19 @@ import styles from './index.less';
 
 export interface ChartRightProps {}
 
-// 数据源
-const data = [
-  { orderName: 'web', order: 38 },
-  { orderName: 'java', order: 52 },
-  { orderName: 'phthon', order: 61 },
-  { orderName: 'bigdata', order: 45 },
-  { orderName: 'ui', order: 48 },
-];
+
 
 const ChartRight: React.FC<ChartRightProps> = (props) => {
-  const {} = props;
-
+  const {homeList}=props;
+  const {order_counter}=homeList||{order_counter:{}};
+  const {web,java,python,bigdata,ui}=order_counter||{web:0,java:0,python:0,bigdata:0,ui:0};
+  const data = [
+    { orderName: 'web', order: Number(web) },
+    { orderName: 'java', order: Number(java) },
+    { orderName: 'python', order:Number(python) },
+    { orderName: 'bigdata', order:Number(bigdata) },
+    { orderName: 'ui', order:Number(ui) },
+  ];
   return (
     <div>
       <h2>学科订单来源统计</h2>

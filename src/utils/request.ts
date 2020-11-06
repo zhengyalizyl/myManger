@@ -2,7 +2,7 @@
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
-import { extend } from 'umi-request';
+import { extend,RequestInterceptor,RequestOptionsInit } from 'umi-request';
 import { notification } from 'antd';
 
 const codeMessage = {
@@ -53,4 +53,44 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
 });
 
+
+
+const allowDefeaultUrl=["/api/user/login", "/api/user/register","/api/user/add"]
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+request.interceptors.request.use((url, options) => {
+  let tokenLocalStorage: string | null = localStorage.getItem('zylManagerToken');
+const isAllowDefaultUrl=allowDefeaultUrl.indexOf(url)>-1;
+
+if ((tokenLocalStorage === null || tokenLocalStorage.length === 0) && !isAllowDefaultUrl) {
+    window.location.href = '/user/login';
+    return;
+  }
+
+  if (tokenLocalStorage === null) {
+    tokenLocalStorage = '';
+  }
+
+  if(!isAllowDefaultUrl&&tokenLocalStorage){
+    options.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      Authorization: 'Bearer '+tokenLocalStorage,//这里要空一格
+      ...options.headers,
+    };
+  }else{
+    options.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      ...options.headers,
+    };
+  }
+
+
+  // eslint-disable-next-line consistent-return
+  return {
+    options: { ...options },
+  };
+});
 export default request;

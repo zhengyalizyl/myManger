@@ -1,16 +1,18 @@
 import request from '@/utils/request';
+import qs from 'qs';
 
 export interface LoginParamsType {
-  userName: string;
-  password: string;
-  mobile: string;
-  captcha: string;
+  user_name: string;
+  user_pwd: string;
 }
 
 export async function fakeAccountLogin(params: LoginParamsType) {
-  return request('/api/login/account', {
+  return request('/api/user/login', {
     method: 'POST',
-    data: params,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    data: qs.stringify(params),
   });
 }
 

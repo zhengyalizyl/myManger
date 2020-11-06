@@ -3,17 +3,15 @@ import { Effect, Reducer } from 'umi';
 import { queryCurrent, query as queryUsers } from '@/services/user';
 
 export interface CurrentUser {
-  avatar?: string;
-  name?: string;
-  title?: string;
-  group?: string;
-  signature?: string;
-  tags?: {
-    key: string;
-    label: string;
-  }[];
-  userid?: string;
-  unreadCount?: number;
+  c_time: Date;
+  e_email: string;
+  icon_url?: string;
+  intro_self: string;
+  join_time: Date;
+  phone: string;
+  user_id: string;
+  user_name: string;
+  user_role: number;
 }
 
 export interface UserModelState {
@@ -50,9 +48,10 @@ const UserModel: UserModelType = {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
+      console.log(response, 'fetchCurrent');
       yield put({
         type: 'saveCurrentUser',
-        payload: response,
+        payload: response.result||{},
       });
     },
   },
@@ -61,7 +60,7 @@ const UserModel: UserModelType = {
     saveCurrentUser(state, action) {
       return {
         ...state,
-        currentUser: action.payload || {},
+        currentUser:action.payload,
       };
     },
     changeNotifyCount(

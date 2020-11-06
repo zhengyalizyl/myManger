@@ -8,6 +8,9 @@ import LoginForm from './components/Login';
 
 import styles from './style.less';
 import login from '../../assets/imgs/login.jpg';
+import md5 from "md5"
+const  S_KEY="WaYjH1314.zylLike.CoM"
+
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginForm;
 interface LoginProps {
@@ -36,18 +39,14 @@ const Login: React.FC<LoginProps> = (props) => {
   const [type, setType] = useState<string>('account');
 
   const handleSubmit = (values: LoginParamsType) => {
+  
     const { dispatch } = props;
     dispatch({
       type: 'login/login',
-      payload: { ...values, type },
+      payload: { ...values,user_pwd:md5(values.user_pwd+S_KEY) },
     });
   };
   
-  useEffect(()=>{
-    return ()=>{
-      console.log('zujianxiezai============')
-    }
-  },[])
   let showMsg;
   let contentMsg = '';
   if (status === 'error' && loginType === 'account' && !submitting) {
@@ -69,8 +68,8 @@ const Login: React.FC<LoginProps> = (props) => {
       </div>
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
         <UserName
-          name="userName"
-          placeholder="用户名: admin or user"
+          name="user_name"
+          placeholder="用户名: zyl"
           rules={[
             {
               required: true,
@@ -79,8 +78,8 @@ const Login: React.FC<LoginProps> = (props) => {
           ]}
         />
         <Password
-          name="password"
-          placeholder="密码: ant.design"
+          name="user_pwd"
+          placeholder="密码: zyl"
           rules={[
             {
               required: true,

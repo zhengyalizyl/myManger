@@ -19,6 +19,7 @@ import { ConnectState } from '@/models/connect';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/imgs/login.jpg';
 import styles from './BasicLayout.less';
+import { UserModelState } from "../models/user";
 
 const noMatch = (
   <Result
@@ -39,6 +40,7 @@ export interface BasicLayoutProps extends ProLayoutProps {
   route: ProLayoutProps['route'] & {
     authority: string[];
   };
+  user:UserModelState
   settings: Settings;
   dispatch: Dispatch;
 }
@@ -65,6 +67,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     dispatch,
     children,
     settings,
+    user,
     location = {
       pathname: '/',
     },
@@ -101,7 +104,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   );
 
   const { formatMessage } = useIntl();
-
+ const title=user.currentUser?(user.currentUser.user_name?user.currentUser.user_name:'zyl'):'zyl';
+ console
   return (
     <ProLayout
       formatMessage={formatMessage}
@@ -136,7 +140,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       {...props}
       {...settings}
       logo={logo}
-      title="zytl2"
+      title={title}
       menuHeaderRender={(logo, title) => (
         <div
           className={styles.profile}
@@ -156,7 +160,11 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   );
 };
 
-export default connect(({ global, settings }: ConnectState) => ({
-  collapsed: global.collapsed,
-  settings,
-}))(BasicLayout);
+export default connect(({ global, settings,user }: ConnectState) => {
+  return {
+    collapsed: global.collapsed,
+    settings,
+    user
+  }
+
+})(BasicLayout);

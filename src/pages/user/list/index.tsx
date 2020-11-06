@@ -53,7 +53,7 @@ const columns = [
     dataIndex: 'operation',
     render: () => (
       <>
-      <Button type="link" onClick={()=>{
+      <Button type='primary'  style={{backgroundColor:'#5bc0de',borderColor:'#46b8da',marginRight:10}}  onClick={()=>{
        history.push({
          pathname: '/user/center',
          query:{
@@ -61,7 +61,7 @@ const columns = [
          }
        })
       }}>查看</Button>
-        <Button type='link'>锁定</Button>
+        <Button type='primary'  style={{backgroundColor:'#f0ad4e',borderColor:'#eea236'}}>锁定</Button>
       </>
     ),
   },
@@ -103,12 +103,12 @@ const UserList: React.FC<UserListProps> = (props) => {
           <UserSelcect defaultValue="按性别" />
           <UserSelcect defaultValue="按地区" />
           <UserSelcect defaultValue="按日期" />
-          <Button type="primary">筛选</Button>
+          <Button type="primary" danger>筛选</Button>
         </div>
         <div>
           <Search
             placeholder="input search text"
-            enterButton="Search"
+            enterButton="搜索"
             onSearch={(value) => console.log(value)}
           />
         </div>

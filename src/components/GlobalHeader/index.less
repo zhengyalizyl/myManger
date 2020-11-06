@@ -21,6 +21,13 @@
   height: 48px;
   margin-left: auto;
   overflow: hidden;
+  >div{
+    margin-right: 20px;
+    cursor: pointer;
+    &:hover{
+
+    }
+  }
   .action {
     display: flex;
     align-items: center;
@@ -37,6 +44,7 @@
     &:global(.opened) {
       background: @pro-header-hover-bg;
     }
+   
   }
   .search {
     padding: 0 12px;

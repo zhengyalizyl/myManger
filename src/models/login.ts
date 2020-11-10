@@ -79,6 +79,7 @@ const Model: LoginModelType = {
 
   reducers: {
     changeloginOut(state){
+      localStorage.removeItem('zylManagerToken')
       return {
         ...state,
         status: undefined,

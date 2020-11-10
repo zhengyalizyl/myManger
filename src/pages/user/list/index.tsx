@@ -4,8 +4,14 @@ import { Table, Button, Input } from 'antd';
 import UserSelcect from '../../../components/User/Select';
 import { history,withRouter } from 'umi';
 import styles from './index.less';
+import { Link, connect, Dispatch } from 'umi';
+import { ConnectState } from "../../../models/connect";
+import { StudentModelType } from "../../../models/student";
 
-interface UserListProps {}
+interface UserListProps {
+  dispatch:Dispatch,
+  student:StudentModelType
+}
 
 const columns = [
   {
@@ -67,33 +73,49 @@ const columns = [
   },
 ];
 
-const data :any= [];
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    No: i + 1,
-    regAccount: i + '@itlike.com',
-    userNick: 'haha' + i,
-    age: 32,
-    sex: '男',
-    region: '天津',
-    phone: 15369859836,
-    point: 12 + i,
-    registerTime: new Date().toDateString(),
-    loginTime: new Date().toDateString(),
-  });
-}
+
 
 const { Search } = Input;
 const UserList: React.FC<UserListProps> = (props) => {
+  const {dispatch,student}=props;
   const [loading, setLoading] = useState(true);
+  const [page,setPage]=useState(1);
+  const [pageSize,setPageSize]=useState(5);
+  const data :any= [];
+  const {studentCount,studentList}=student;
+console.log(student)
+  for (let i = 0; i < studentList.length; i++) {
+    data.push({
+      key: i,
+      No: (page-1)*pageSize + 1+i,
+      regAccount: studentList[i].reg_account,
+      userNick: studentList[i].user_name,
+      age: studentList[i].user_age,
+      sex: studentList[i].user_sex,
+      region: studentList[i].area,
+      phone: studentList[i].phone,
+      point:studentList[i].points,
+      registerTime: (new Date(studentList[i].reg_time)).toLocaleString(),
+      loginTime:(new Date(studentList[i].last_login_time)).toLocaleString(),
+    });
+  }
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    return () => {
-      clearTimeout(timer);
-    };
+   setLoading(true)
+    dispatch({
+      type:'student/fetchStudentCount',
+      callback:(count:number)=>{
+       dispatch({
+         type:'student/fetchStudentList',
+         payload:{
+           page,
+           pageSize
+         }
+       }).then(()=>{
+         setLoading(false)
+       })
+      }
+    })
   }, []);
   return (
     <PageHeaderWrapper>
@@ -118,4 +140,9 @@ const UserList: React.FC<UserListProps> = (props) => {
   );
 };
 
-export default withRouter(UserList);
+export default connect(({student}: ConnectState)=>{
+  return {
+    student
+  }
+   
+})(UserList);

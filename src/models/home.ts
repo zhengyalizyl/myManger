@@ -53,7 +53,6 @@ const HomeModel: HomeModelType = {
   effects: {
     *fetchHomeList(_, { call, put }) {
       const response = yield call(getHomeList);
-      console.log(response,'请求回来的数据')
       yield put({
         type: 'saveHome',
         payload: response.result,

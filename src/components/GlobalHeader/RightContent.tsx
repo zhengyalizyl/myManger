@@ -37,9 +37,6 @@ const clickType = {
     console.log('用户中心')
   history.push({
     pathname: '/user/setting',
-    query:{
-      id:1
-    }
   })
   },
   exit:(dispatch?:Dispatch)=>{
@@ -51,14 +48,14 @@ const clickType = {
 };
 
 const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = (props) => {
-  const { theme, layout, dispatch } = props;
+  const { theme, layout, dispatch,currentUser } = props;
   let className = styles.right;
 
   if (theme === 'dark' && layout === 'top') {
     className = `${styles.right}  ${styles.dark}`;
   }
 
-  console.log(props, 'GlobalHeaderRight');
+  console.log(props,currentUser, 'GlobalHeaderRight');
 
   const onclick = (key: string) => {
     clickType[key](dispatch);
@@ -97,7 +94,8 @@ const GlobalHeaderRight: React.SFC<GlobalHeaderRightProps> = (props) => {
   );
 };
 
-export default connect(({ settings }: ConnectState) => ({
+export default connect(({ settings,user }: ConnectState) => ({
   theme: settings.navTheme,
   layout: settings.layout,
+  currentUser:user.currentUser
 }))(GlobalHeaderRight);

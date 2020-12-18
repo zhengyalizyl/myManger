@@ -1,6 +1,6 @@
 import { Effect, Reducer } from 'umi';
 
-import { queryCurrent, query as queryUsers } from '@/services/user';
+import { queryCurrent, query as queryUsers,editCurrent } from '@/services/user';
 
 export interface CurrentUser {
   c_time: Date;
@@ -48,12 +48,19 @@ const UserModel: UserModelType = {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
-      console.log(response, 'fetchCurrent');
       yield put({
         type: 'saveCurrentUser',
         payload: response.result||{},
       });
     },
+    *fetchEditCurrent({payload},{call,put}){
+      const response=yield call(editCurrent,payload);
+      yield put({
+        type: 'saveCurrentUser',
+        payload: response.result||{},
+      })
+
+    }
   },
 
   reducers: {

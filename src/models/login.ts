@@ -75,9 +75,9 @@ const Model: LoginModelType = {
             redirect: window.location.href,
           }),
         });
-          yield put({
-            type:'changeloginOut'
-          })
+          // yield put({
+          //   type:'changeloginOut'
+          // })
       }
       else if(window.location.pathname.includes('/login')){
         history.replace({

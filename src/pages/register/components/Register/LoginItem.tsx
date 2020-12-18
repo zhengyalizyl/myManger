@@ -2,7 +2,7 @@ import { Button, Col, Input, Row, Form, message } from 'antd';
 import React, { useState, useCallback, useEffect } from 'react';
 import omit from 'omit.js';
 import { FormItemProps } from 'antd/es/form/FormItem';
-import { getEmailCaptcha } from '@/services/login';
+import { getCaptcha } from '@/services/login';
 
 import ItemMap from './map';
 import LoginContext, { LoginContextProps } from './LoginContext';
@@ -14,12 +14,8 @@ export interface LoginItemType {
   UserName: React.FC<WrappedLoginItemProps>;
   Password: React.FC<WrappedLoginItemProps>;
   Mobile: React.FC<WrappedLoginItemProps>;
-  EmailCaptcha: React.FC<WrappedLoginItemProps>;
   Captcha: React.FC<WrappedLoginItemProps>;
-  Email:React.FC<WrappedLoginItemProps>;
 }
-
-
 
 export interface LoginItemProps extends Partial<FormItemProps> {
   name?: string;
@@ -27,16 +23,14 @@ export interface LoginItemProps extends Partial<FormItemProps> {
   placeholder?: string;
   buttonText?: React.ReactNode;
   countDown?: number;
-  getEmailCaptchaButtonText?: string;
-  getEmailCaptchaSecondText?: string;
+  getCaptchaButtonText?: string;
+  getCaptchaSecondText?: string;
   updateActive?: LoginContextProps['updateActive'];
   type?: string;
   defaultValue?: string;
   customProps?: { [key: string]: unknown };
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   tabUtil?: LoginContextProps['tabUtil'];
-  captchaCode?:string
-  setCaptchaCode?:(e:string)=>void
 }
 
 const FormItem = Form.Item;
@@ -73,24 +67,20 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
     defaultValue,
     rules,
     name,
-    getEmailCaptchaButtonText,
-    getEmailCaptchaSecondText,
+    getCaptchaButtonText,
+    getCaptchaSecondText,
     updateActive,
     type,
     tabUtil,
-    captchaCode,
-    setCaptchaCode,
     ...restProps
   } = props;
 
-  const onGetEmailCaptcha = useCallback(async (email: string) => {
-    const result = await getEmailCaptcha(email);
-    const {successfull,result:newResult,status_code}=result;
-    if (status_code === 200&&!successfull) {
-      message.success(newResult);
+  const onGetCaptcha = useCallback(async (mobile: string) => {
+    const result = await getCaptcha(mobile);
+    if (result === false) {
       return;
     }
-    message.success('获取验证码成功!');
+    message.success('获取验证码成功！验证码为：1234');
     setTiming(true);
   }, []);
 
@@ -103,7 +93,6 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
           if (preSecond <= 1) {
             setTiming(false);
             clearInterval(interval);
-
             // 重置秒数
             return countDown || 60;
           }
@@ -119,46 +108,9 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
   // get getFieldDecorator props
   const options = getFormItemOptions(props);
   const otherProps = restProps || {};
-  if (type === 'EmailCaptcha') {
-    const inputProps = omit(otherProps, ['onGetEmailCaptcha', 'countDown']);
-    return (
-      <FormItem shouldUpdate noStyle>
-        {({getFieldValue,getFieldError}) => {
-          const disabled=!(getFieldValue('email')&&getFieldError('email').length===0)||timing;
-          let  isCount=(count>0)&&timing?true:false;
-   return  (
-          <Row gutter={8}>
-            <Col span={16}>
-              <FormItem name={name} {...options}>
-                <Input {...customProps} {...inputProps} />
-              </FormItem>
-            </Col>
-            <Col span={8}>
-              <Button
-                disabled={disabled}
-                className={styles.getCaptcha}
-                size="large"
-                onClick={() => {
-                  //点了，时间没到，disable为true
-                  //初始的时候，getFieldValue('email')&&getFieldError('email').length===0,此时diable为true
-                  //填入了值,并且值是正确的，此时倒计时，如果此时改变了值，也要等时间到了
-                  console.log(timing)
-                  const value = getFieldValue('email');
-                  setTiming(true)
-                  onGetEmailCaptcha(value);
-                }}
-              >
-                {isCount ? `${count} 秒` : '获取验证码'}
-              </Button>
-            </Col>
-          </Row>
-        )}}
-      </FormItem>
-    );
-  }
 
   if (type === 'Captcha') {
-    const inputProps = omit(otherProps, ['onGetEmailCaptcha', 'countDown']);
+    const inputProps = omit(otherProps, ['onGetCaptcha', 'countDown']);
 
     return (
       <FormItem shouldUpdate noStyle>
@@ -171,14 +123,15 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
             </Col>
             <Col span={8}>
               <Button
-                // className={styles.getCaptcha}
-                className={styles.captcha}
+                disabled={timing}
+                className={styles.getCaptcha}
                 size="large"
                 onClick={() => {
-                  setCaptchaCode&&setCaptchaCode('/api/user/login/captcha?t='+new Date().getTime())
+                  const value = getFieldValue('mobile');
+                  onGetCaptcha(value);
                 }}
               >
-              <img src={captchaCode||''}/>
+                {timing ? `${count} 秒` : '获取验证码'}
               </Button>
             </Col>
           </Row>
@@ -186,8 +139,6 @@ const LoginItem: React.FC<LoginItemProps> = (props) => {
       </FormItem>
     );
   }
-
-
   return (
     <FormItem name={name} {...options}>
       <Input {...customProps} {...otherProps} />

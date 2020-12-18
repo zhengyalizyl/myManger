@@ -1,46 +1,44 @@
 import { stringify } from 'querystring';
 import { history, Reducer, Effect } from 'umi';
 
-import { fakeAccountLogin,getCaptcha } from '@/services/login';
+import { fakeAccountRegister } from '@/services/register';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 
-export interface StateType {
+export interface registerStateType {
   status?: 'ok' | 'error';
-  errorMsg?:string;
   type?: string;
   currentAuthority?: 'user' | 'guest' | 'admin';
-  captchaCode?:''
 }
 
-export interface LoginModelType {
+export interface registerModelType {
   namespace: string;
-  state: StateType;
+  state: registerStateType;
   effects: {
-    login: Effect;
+    register: Effect;
     logout: Effect;
   };
   reducers: {
-    changeLoginStatus: Reducer<StateType>;
+    changeregisterStatus: Reducer<registerStateType>;
   };
 }
 
-const Model: LoginModelType = {
-  namespace: 'login',
+const Model: registerModelType = {
+  namespace: 'register',
 
   state: {
     status: undefined,
   },
 
   effects: {
-    *login({ payload }, { call, put }) {
-      const response = yield call(fakeAccountLogin, payload);
+    *register({ payload }, { call, put }) {
+      const response = yield call(fakeAccountregister, payload);
       yield put({
-        type: 'changeLoginStatus',
+        type: 'changeregisterStatus',
         payload: response,
       });
-      // Login successfully
-      if (response.status_code === 200&&response.successfull) {
+      // register successfully
+      if (response.status_code === 200) {
         const urlParams = new URL(window.location.href);
         const token=response.result.token;
         window.localStorage.setItem('zylManagerToken',token)
@@ -60,57 +58,46 @@ const Model: LoginModelType = {
         }
         history.replace(redirect || '/');
       }
-      else if(response.status_code === 200&&!response.successfull){
-        window.location.href = '/login';
-      }
     },
 
     *logout(a,{put}) {
       const { redirect } = getPageQuery();
       // Note: There may be security issues, please note
-      if (window.location.pathname !== '/login' && !redirect) {
+      if (window.location.pathname !== '/register' && !redirect) {
         history.replace({
-          pathname: '/login',
+          pathname: '/register',
           search: stringify({
             redirect: window.location.href,
           }),
         });
           yield put({
-            type:'changeloginOut'
+            type:'changeregisterOut'
           })
-      }
-      else if(window.location.pathname.includes('/login')){
+      }else if(window.location.pathname.includes('/register')){
         history.replace({
-          pathname: '/login',
+          pathname: '/register',
         });
         yield put({
-          type:'changeloginOut'
+          type:'changeregisterOut'
         })
       }
     },
   },
 
   reducers: {
-    changeloginOut(state){
+    changeregisterOut(state){
       localStorage.removeItem('zylManagerToken')
       return {
         ...state,
         status: undefined,
       }
     },
-    changeLoginStatus(state, { payload }) {
-      let currentAuthority='user';
-      const {successfull,result,status_code,user_role}=payload;
-      if(successfull&&status_code===200){
-        currentAuthority=user_role===1?'user':'admin'
-      }
-      setAuthority(currentAuthority);
+    changeregisterStatus(state, { payload }) {
+      setAuthority(payload.currentAuthority);
 
       return {
         ...state,
         status: payload.successfull?'ok':'error',
-        currentAuthority:currentAuthority,
-        errorMsg:payload.successfull?'':payload.result
       };
     },
   },

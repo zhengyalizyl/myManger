@@ -1,4 +1,4 @@
-import { Alert, Checkbox, notification, AlertType } from 'antd';
+import { Alert, Checkbox, notification, AlertType, Button } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { Link, connect, Dispatch } from 'umi';
 import { StateType } from '@/models/login';
@@ -8,11 +8,10 @@ import LoginForm from './components/Login';
 
 import styles from './style.less';
 import login from '../../assets/imgs/login.jpg';
-import md5 from "md5"
-const  S_KEY="WaYjH1314.zylLike.CoM"
+import md5 from 'md5';
+const S_KEY = 'WaYjH1314.zylLike.CoM';
 
-
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginForm;
+const { Tab, UserName, Password, Mobile, EmailCaptcha, Submit, Captcha,Email } = LoginForm;
 interface LoginProps {
   dispatch: Dispatch;
   userLogin: StateType;
@@ -35,48 +34,96 @@ const LoginMessage: React.FC<{
 
 const Login: React.FC<LoginProps> = (props) => {
   const { userLogin = {}, submitting } = props;
-  const { status, type: loginType } = userLogin;
+  const { status, type: loginType,captchaCode:newCaptchaCode,errorMsg } = userLogin;
+ const [captchaCode,setCaptchaCode]=useState('/api/user/login/captcha?t='+new Date().getTime())
   const [type, setType] = useState<string>('account');
+  useEffect(() => {
+    const { dispatch } = props;
+    dispatch({
+      type:'login/captcha'
+    })
+    dispatch({
+      type:'login/logout'
+    })
+  }, []);
 
   const handleSubmit = (values: LoginParamsType) => {
-  
     const { dispatch } = props;
     dispatch({
       type: 'login/login',
-      payload: { ...values,user_pwd:md5(values.user_pwd+S_KEY) },
+      payload: { ...values, user_pwd: md5(values.user_pwd + S_KEY) },
     });
   };
-  
+
   let showMsg;
   let contentMsg = '';
-  if (status === 'error' && loginType === 'account' && !submitting) {
+  console.log(status,submitting)
+  if (status === 'error' && !submitting) {
     showMsg = 'error';
-    contentMsg = '用户名或密码错误，请重新输入';
-  } else if (status === 'ok' && loginType === 'account' && !submitting) {
+    contentMsg = errorMsg||'';
+  } else if (status === 'ok'&& !submitting) {
     showMsg = 'success';
     contentMsg = '登录成功，正在跳转到别的页面';
-  }else{
-    showMsg=''
+  } else {
+    showMsg = '';
   }
   return (
     <div className={styles.main}>
       <div className={styles.loginWrap}>
         <img src={login} className={styles.loginImg} />
       </div>
-    <div className={styles.padding100}>
-      {showMsg && <LoginMessage type={showMsg} content={contentMsg} />}
+      <div className={styles.padding100}>
+        {showMsg && <LoginMessage type={showMsg} content={contentMsg} />}
       </div>
       <LoginForm activeKey={type} onTabChange={setType} onSubmit={handleSubmit}>
-        <UserName
+        {/* <UserName
           name="user_name"
-          placeholder="用户名: zyl"
+          placeholder="邮箱: zyl"
           rules={[
             {
               required: true,
-              message: '请输入用户名!',
+              message: '请输入邮箱',
+            },
+          ]}
+        /> */}
+        <Email
+          name="email"
+          placeholder="邮箱: zyl"
+          rules={[
+            {
+              type: 'email',
+              message: '邮箱格式不正确',
+            },
+            {
+              required: true,
+              message: '请输入邮箱',
             },
           ]}
         />
+        <Captcha
+          captchaCode={captchaCode}
+          name="captcha"
+          placeholder="验证码"
+          setCaptchaCode={setCaptchaCode}
+          rules={[
+            {
+              required: true,
+              message: '请输入验证码',
+            }
+          ]}
+        />
+        <EmailCaptcha
+          name="emailCode"
+          placeholder="邮箱验证码"
+          countDown={60}
+          rules={[
+            {
+              required: true,
+              message: '请输入邮箱验证码',
+            },
+          ]}
+        />
+
         <Password
           name="user_pwd"
           placeholder="密码: zyl"
@@ -88,12 +135,13 @@ const Login: React.FC<LoginProps> = (props) => {
           ]}
         />
         <Submit loading={submitting}>登录</Submit>
+        <a href="">register now!</a>
       </LoginForm>
     </div>
   );
 };
 
-export default connect(({ login, loading }: ConnectState) => ({
+export default connect(({ login, loading}: ConnectState) => ({
   userLogin: login,
   submitting: loading.effects['login/login'],
 }))(Login);

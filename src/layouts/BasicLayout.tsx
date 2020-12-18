@@ -105,7 +105,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
 
   const { formatMessage } = useIntl();
  const title=user.currentUser?(user.currentUser.user_name?user.currentUser.user_name:'zyl'):'zyl';
- console
   return (
     <ProLayout
       formatMessage={formatMessage}
@@ -153,7 +152,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         </div>
       )}
     >
-      <Authorized authority={authorized!.authority} noMatch={noMatch}>
+    <Authorized authority={authorized!.authority} noMatch={noMatch}>
         {children}
       </Authorized>
     </ProLayout>

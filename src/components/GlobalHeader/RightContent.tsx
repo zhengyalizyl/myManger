@@ -2,7 +2,7 @@ import { Tooltip, Tag } from 'antd';
 import { Settings as ProSettings } from '@ant-design/pro-layout';
 import Icon, { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
-import { connect, ConnectProps, SelectLang, Dispatch } from 'umi';
+import { connect, ConnectProps, SelectLang, Dispatch,history } from 'umi';
 import { ConnectState } from '@/models/connect';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
@@ -34,7 +34,13 @@ const clickType = {
   
   },
   userCenter: (dispatch?: Dispatch) => {
-  
+    console.log('用户中心')
+  history.push({
+    pathname: '/user/setting',
+    query:{
+      id:1
+    }
+  })
   },
   exit:(dispatch?:Dispatch)=>{
     dispatch &&

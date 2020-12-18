@@ -83,7 +83,6 @@ const UserList: React.FC<UserListProps> = (props) => {
   const [pageSize,setPageSize]=useState(5);
   const data :any= [];
   const {studentCount,studentList}=student;
-console.log(student)
   for (let i = 0; i < studentList.length; i++) {
     data.push({
       key: i,

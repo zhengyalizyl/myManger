@@ -24,27 +24,6 @@ export default {
       },
     ],
   },
-  Email:{
-    props: {
-      size: 'large',
-      id: 'Email',
-      prefix: (
-        <MailTwoTone
-          style={{
-            color: '#555',
-          }}
-          className={styles.prefixIcon}
-        />
-      ),
-      placeholder: 'admin',
-    },
-    rules: [
-      {
-        required: true,
-        message: 'Please enter email!',
-      },
-    ]
-  },
   Password: {
     props: {
       size: 'large',
@@ -76,19 +55,6 @@ export default {
       {
         pattern: /^1\d{10}$/,
         message: 'Wrong mobile number format!',
-      },
-    ],
-  },
-  EmailCaptcha: {
-    props: {
-      size: 'large',
-      prefix: <MailTwoTone className={styles.prefixIcon} />,
-      placeholder: 'email',
-    },
-    rules: [
-      {
-        required: true,
-        message: 'Please enter Captcha!',
       },
     ],
   },

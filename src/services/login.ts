@@ -16,6 +16,9 @@ export async function fakeAccountLogin(params: LoginParamsType) {
   });
 }
 
-export async function getFakeCaptcha(mobile: string) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+
+
+export async function getEmailCaptcha(email: string) {
+  return request(`/api/user/login/emailCaptcha?email=${email}`);
 }
+

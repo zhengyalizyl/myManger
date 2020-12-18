@@ -50,6 +50,22 @@ export default defineConfig({
           path: '/login',
           component: './login',
         },
+        {
+          name: 'login',
+          path: '/login/:id',
+          component: './login',
+        },
+      ],
+    },
+    {
+      path: '/register',
+      component: '../layouts/UserLayout',
+      routes: [
+        {
+          name: 'register',
+          path: '/register',
+          component: './register',
+        },
       ],
     },
     {
@@ -94,6 +110,13 @@ export default defineConfig({
                   name: '用户信息',
                   icon: 'user',
                   component: './user/center',
+                },
+                {
+                  hideInMenu: true,
+                  path: '/user/setting',
+                  name: '用户信息',
+                  icon: 'user',
+                  component: './user/setting',
                 },
               ],
             },

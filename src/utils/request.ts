@@ -65,13 +65,26 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
 });
 
-const allowDefeaultUrl = ['/api/user/login', '/api/user/register', '/api/user/add'];
+const allowDefeaultUrl = [
+  '/api/user/login',
+  '/api/user/register',
+  '/api/user/add',
+  '/api/user/login/captcha',
+];
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 request.interceptors.request.use((url, options) => {
-  let tokenLocalStorage: string | null = localStorage.getItem('zylManagerToken')||'';
-  const isAllowDefaultUrl = allowDefeaultUrl.indexOf(url) > -1;
+  let tokenLocalStorage: string | null = localStorage.getItem('zylManagerToken') || '';
+  let test = /^\/api\/user\/login\/emailCaptcha/;
+  let isAllowDefaultUrl = true;
+  console.log(test.test(url),allowDefeaultUrl.indexOf(url))
+  if (test.test(url)) {
+    isAllowDefaultUrl = true;
+  } else {
+    isAllowDefaultUrl = allowDefeaultUrl.indexOf(url) > -1;
+  }
+
 
   if (!tokenLocalStorage && !isAllowDefaultUrl) {
     window.location.href = '/login';

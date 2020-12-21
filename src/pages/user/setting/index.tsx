@@ -10,6 +10,8 @@ import moment from 'moment';
 import User from '../../../pages/imgs/svg/user.svg';
 import './index.less';
 import 'moment/locale/zh-cn';
+import {isGif,isJpg,isPng} from './checkImg'
+import ImageInput from "./ImageInput";
 
 interface UserPersonProps {}
 const layout = {
@@ -25,36 +27,6 @@ const normFile = (e: any) => {
   return e && e.fileList;
 };
 
-const getImageUtils = (file: File) => {
-  const fileReader = new FileReader();
-  return new Promise((reslove) => {
-    fileReader.onload = (e) => {
-      const { result } = e.target;
-      console.log(result, '=========');
-      const ret = [...new Uint8Array(result)]
-        .map((v) => v.toString(16).toUpperCase())
-        .map((v) => v.padStart(2, '0'));
-      reslove(ret);
-    };
-    fileReader.readAsArrayBuffer(file);
-  });
-};
-
-const isGif = async (file: File) => {
-  const result = await getImageUtils(file.slice(0, 6));
-  return result.join(' ') === '47 49 46 38 39 61' || result.join(' ') === '47 49 46 38 37 61';
-};
-
-const isJpg = async (file: File) => {
-  const result1 = await getImageUtils(file.slice(0, 2));
-  const result2 = await getImageUtils(file.slice(file.size - 2, file.size));
-  return result1.join(' ') === 'FF D8' && result2.join(' ') === 'FF D9';
-};
-
-const isPng = async (file: File) => {
-  const result = await getImageUtils(file.slice(0, 8));
-  return result.join(' ') === '89 50 4E 47 0D 0A 1A 0A';
-};
 
 const UserPerson: React.FC<UserPersonProps> = (props) => {
   const { currentUser } = props;
@@ -131,6 +103,27 @@ const UserPerson: React.FC<UserPersonProps> = (props) => {
     }
   };
 
+  const checkImageUrl=async (rule,file:File)=>{
+    if(file){
+      try {
+        const res =
+          (await isPng(file)) ||
+          (await isJpg(file)) ||
+          (await isGif(file));
+        if (res) {
+          return Promise.resolve();
+        } else {
+          message.error('必须是png或者jpg或者gif');
+          return Promise.reject('必须是png或者jpg或者gif')
+        }
+      } catch (error) {
+        new Error('出错了');
+      }
+     
+    }
+
+  }
+
   return (
     <div>
       {/* <PageHeaderWrapper> */}
@@ -153,20 +146,17 @@ const UserPerson: React.FC<UserPersonProps> = (props) => {
         <Form.Item name="real_name" label="姓名" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
+        <Form.Item name="img_url" label="图片" rules={[{ required: true },{validator:checkImageUrl}]}>
+         <ImageInput/>
+        </Form.Item>
         <Form.Item
           label="头像"
           name="icon_url"
-          // help="必须是png或者jpg或者gif"
+          help="必须是png或者jpg或者gif"
           rules={[
             { required: true, message: '必循' },
             {
               validator: (_, value, callback) => {
-                //判断图片的大小是否满足要求
-                //png的宽*高是18-20位*22-24位(不包含20位,24位)
-                //jpg的宽*高是a5对应的10进制，即165-167位*a3对应的163-165位(不包含165位和167位)
-                //gif的宽和高是6-8位，并且第7位与第6位翻转一下,8-10位并且9位于第8位翻转一下,如6位是89，7位是02， gif就是 0289 而不是8902的值 切分后翻转一下
-                // if(_.size>200){
-                // }
                 callback();
                 console.log('头像的代销', value, _);
               },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, InputNumber, Button, DatePicker, Upload, Radio } from 'antd';
+import { Form, Input, InputNumber, Button, DatePicker, Upload, Radio, message } from 'antd';
 import { history, withRouter } from 'umi';
 import styles from './index.less';
 import { UploadOutlined, InboxOutlined, LockOutlined } from '@ant-design/icons';
@@ -15,17 +15,6 @@ interface UserPersonProps {}
 const layout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 16 },
-};
-
-const validateMessages = {
-  required: '${label} is required!',
-  types: {
-    email: '${label} is not a valid email!',
-    number: '${label} is not a valid number!',
-  },
-  number: {
-    range: '${label} must be between ${min} and ${max}',
-  },
 };
 
 const normFile = (e: any) => {
@@ -95,41 +84,50 @@ const UserPerson: React.FC<UserPersonProps> = (props) => {
     console.log(values, new_user_join_time);
   };
 
-  const beforeUpload = (file) => {
+  const beforeUpload = async (file) => {
     console.log(file,'============');
-    return true;
+ const  isImage= await checkIsImge(file)
+ if(!isImage){
+   return Promise.reject();
+ }
+ return Promise.resolve()
+//  const  isExeccedFileSize=await checkImageSize(file,1*1024)
+//   return  Promise.reject(a)
   };
 
-  const checkImageSize=async (_,value)=>{
+  const checkImageSize=async (file:File,size:number):Promise<any>=>{
     //判断图片的大小是否满足要求
      //png的宽*高是18-20位*22-24位(不包含20位,24位)
     //jpg的宽*高是a5对应的10进制，即165-167位*a3对应的163-165位(不包含165位和167位)
     //gif的宽和高是6-8位，并且第7位与第6位翻转一下,8-10位并且9位于第8位翻转一下,如6位是89，7位是02， gif就是 0289 而不是8902的值 切分后翻转一下
     try {
-      const { file } = value;
-      const { originFileObj } = file;
-      const isPng=await isPng(originFileObj)
+      const isPngImg=await isPng(file);
+      const isGifImg=await isGif(file);
+      const isJpgImg=await isJpg(file)
+      if(isPngImg){
+        // checkPngSizee(file.slice(),size)
+      }
     } catch (error) {
       return Promise.reject('出错了');
     }
    
   }
-  const checkIsImge = async (_, value) => {
+ 
+  const checkIsImge = async (file:File):Promise<any> => {
     //先判断是不是png/jpg/gif
     try {
-      const { file } = value;
-      const { originFileObj } = file;
       const res =
-        (await isPng(originFileObj)) ||
-        (await isJpg(originFileObj)) ||
-        (await isGif(originFileObj));
+        (await isPng(file)) ||
+        (await isJpg(file)) ||
+        (await isGif(file));
       if (res) {
-        return Promise.resolve();
+        return true;
       } else {
-        return Promise.reject('必须是png或者jpg或者gif');
+        message.error('必须是png或者jpg或者gif');
+       return false
       }
     } catch (error) {
-      return Promise.reject('出错了');
+      new Error('出错了');
     }
   };
 
@@ -141,7 +139,6 @@ const UserPerson: React.FC<UserPersonProps> = (props) => {
         {...layout}
         name="nest-messages"
         onFinish={onFinish}
-        validateMessages={validateMessages}
         initialValues={{
           icon_url,
           e_email,
@@ -162,10 +159,6 @@ const UserPerson: React.FC<UserPersonProps> = (props) => {
           // help="必须是png或者jpg或者gif"
           rules={[
             { required: true, message: '必循' },
-            // {validator:checkImage},
-            {
-              validator: checkIsImge,
-            },
             {
               validator: (_, value, callback) => {
                 //判断图片的大小是否满足要求

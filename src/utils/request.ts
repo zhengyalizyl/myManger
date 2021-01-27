@@ -75,8 +75,8 @@ const allowDefeaultUrl = [
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 request.interceptors.request.use((url, options) => {
-  let tokenLocalStorage: string | null = localStorage.getItem('zylManagerToken') || '';
-  let test = /^\/api\/user\/login\/emailCaptcha/;
+  const tokenLocalStorage: string | null = localStorage.getItem('zylManagerToken') || '';
+  const test = /^\/api\/user\/login\/emailCaptcha/;
   let isAllowDefaultUrl = true;
   console.log(test.test(url),allowDefeaultUrl.indexOf(url))
   if (test.test(url)) {
@@ -94,14 +94,14 @@ request.interceptors.request.use((url, options) => {
   if (!isAllowDefaultUrl && tokenLocalStorage) {
     options.headers = {
       Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      Authorization: 'Bearer ' + tokenLocalStorage, //这里要空一格
+      // 'Content-Type': 'application/json; charset=utf-8',
+      Authorization: `Bearer ${  tokenLocalStorage}`, // 这里要空一格
       ...options.headers,
     };
   } else {
     options.headers = {
       Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
+      // 'Content-Type': 'application/json; charset=utf-8',
       ...options.headers,
     };
   }

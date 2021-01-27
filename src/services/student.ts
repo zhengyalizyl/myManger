@@ -7,9 +7,17 @@ export interface StudentParamsType {
 
 export async function getStudentList(params: StudentParamsType) {
   const {page,pageSize}=params;
-  return request(`/api/stu/list?page=${page}&pageSize=${pageSize}`)
+  return request(`/api/stu/list?page=${page}&pageSize=${pageSize}`,{
+    headers:{
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  })
 }
-
+  
 export async function getStudentCount() {
-  return request(`/api/stu/count`);
+  return request(`/api/stu/count`,{
+    headers:{
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  });
 }

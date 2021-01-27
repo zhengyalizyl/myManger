@@ -4,6 +4,7 @@ import { UserModelState } from './user';
 import { StateType } from './login';
 import {HomeModelState } from "./home";
 import {StudentModelState } from "./student";
+import {UploadModelState } from "./upload";
 
 export { GlobalModelState, UserModelState };
 
@@ -17,6 +18,7 @@ export interface Loading {
     user?: boolean;
     login?: boolean;
     student?:boolean;
+    upload?:boolean;
   };
 }
 
@@ -26,8 +28,9 @@ export interface ConnectState {
   settings: ProSettings;
   user: UserModelState;
   login: StateType;
-  home:HomeModelState,
-  student:StudentModelType
+  home: HomeModelState,
+  student: StudentModelState,
+  upload:UploadModelState
 }
 
 export interface Route extends MenuDataItem {

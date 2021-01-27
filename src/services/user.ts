@@ -7,11 +7,19 @@ export interface LoginParamsType {
 }
 
 export async function query(): Promise<any> {
-  return request('/api/users');
+  return request('/api/users',{
+    headers:{
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  });
 }
 
 export async function queryCurrent(): Promise<any> {
-  return request('/api/user/info');
+  return request('/api/user/info',{
+    headers:{
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  });
 }
 export async function editCurrent(params: LoginParamsType): Promise<any> {
   return request('/api/user/edit',{

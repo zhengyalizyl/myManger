@@ -17,5 +17,9 @@ export async function fakeAccountRegister(params: RegisterParamsType) {
 }
 
 export async function getCaptcha(mobile: string) {
-  return request(`/api/Register/captcha?mobile=${mobile}`);
+  return request(`/api/Register/captcha?mobile=${mobile}`,{
+    headers:{
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  });
 }

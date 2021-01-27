@@ -1,9 +1,8 @@
-export const getImageUtils = (file: File) => {
+export const getImageUtils = (file: Blob) => {
   const fileReader = new FileReader();
   return new Promise((reslove) => {
     fileReader.onload = (e) => {
       const { result } = e.target;
-      console.log(result, '=========');
       const ret = [...new Uint8Array(result)]
         .map((v) => v.toString(16).toUpperCase())
         .map((v) => v.padStart(2, '0'));

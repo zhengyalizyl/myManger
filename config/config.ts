@@ -226,6 +226,19 @@ export default defineConfig({
               ],
             },
             {
+              path: '/upload',
+              name: '上传图',
+              icon: 'icon-bars',
+              routes: [
+                {
+                  path:'/upload/image',
+                  name:'sub-image',
+                  icon:'smile',
+                  component:'./upload/Add'
+                }
+              ]
+            },
+            {
               path: '/admin',
               name: '管理员',
               icon: 'crown',

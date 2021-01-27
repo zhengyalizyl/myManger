@@ -19,6 +19,10 @@ export async function fakeAccountLogin(params: LoginParamsType) {
 
 
 export async function getEmailCaptcha(email: string) {
-  return request(`/api/user/login/emailCaptcha?email=${email}`);
+  return request(`/api/user/login/emailCaptcha?email=${email}`,{
+    headers:{
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  });
 }
 

@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import qs from 'qs';
 
 export async function postUpload(params: FormData) {
   return request('/api/uploadfile',{
@@ -7,12 +8,12 @@ export async function postUpload(params: FormData) {
   });
 }
 export async function postMergeUpload(params: FormData) {
-  return request('mergeUploadfile',{
+  return request('/api/mergeUploadfile',{
     method: 'POST',
     headers:{
       'Content-Type': 'application/json; charset=utf-8',
     },
-    data: params,
+    data: qs.stringify(params),
   });
 }
 

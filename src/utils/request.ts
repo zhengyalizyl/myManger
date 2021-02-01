@@ -28,7 +28,6 @@ const codeMessage = {
  * 异常处理程序
  */
 const errorHandler = (error: { response: any }): Response => {
-  console.log(response, error, '错误处理');
   const { response } = error;
 
   if (response && response.status_code) {
@@ -78,7 +77,6 @@ request.interceptors.request.use((url, options) => {
   const tokenLocalStorage: string | null = localStorage.getItem('zylManagerToken') || '';
   const test = /^\/api\/user\/login\/emailCaptcha/;
   let isAllowDefaultUrl = true;
-  console.log(test.test(url),allowDefeaultUrl.indexOf(url))
   if (test.test(url)) {
     isAllowDefaultUrl = true;
   } else {

@@ -43,9 +43,7 @@ const StudentModel: StudentModelType = {
 
   effects: {
     *fetchStudentList({payload}, { call, put }) {
-      console.log(payload)
       const response = yield call(getStudentList,payload);
-      console.log(response,'请求回来的数据')
       yield put({
         type: 'saveStudent',
         payload: response.result,

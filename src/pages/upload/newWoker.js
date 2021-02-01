@@ -12,7 +12,6 @@ self.onmessage=(e)=>{
     fsReader.onload=event=>{
       const file=event.target.result;
          spark.append(file);
-         console.log(index,'===============')
           if(index===chunks.length){
                hashProgress=100;
                self.postMessage({

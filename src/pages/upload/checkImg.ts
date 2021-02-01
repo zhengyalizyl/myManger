@@ -47,7 +47,7 @@ export const getBase64FromImg= (file:File)=>{
 
 }
 
-const CHUNK_SIZE = 0.01 * 1024 * 1024; // 1M
+export const CHUNK_SIZE = 1 * 1024 * 1024; // 1M
 export const createFileChunk=(file:File,size=CHUNK_SIZE)=>{
   const  chunks=[];
  let cur=0;

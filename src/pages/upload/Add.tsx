@@ -6,6 +6,7 @@ import { FileSearchOutlined, PlusOutlined } from '@ant-design/icons';
 import SparkMd5 from 'spark-md5';
 import { connect } from 'umi';
 import { ConnectState } from '../../models/connect';
+import { UploadModelState } from "../../models/upload";
 import styles from './index.less';
 import {
   isPng,
@@ -16,19 +17,22 @@ import {
   createFileChunk,
 } from './checkImg';
 
+export const offset =0.01 * 1024 * 1024;
 interface UploadAddProps {
   onChange?: (files: FileReaderEventMap) => void;
+  upload:UploadModelState
 }
 
 const UploadAdd: React.FC<UploadAddProps> = (props) => {
+  const {status,uploadUrl}=props.upload
   const [dragIn, setDragIn] = useState(false);
-  const uploadFileInput = useRef(null);
+  const uploadFileInput = useRef<HTMLElement>(null);
   const [imgFileUrl, setImgFile] = useState(null);
   const [fileUrl, setFileUrl] = useState(null);
   const [chunks, setChunks] = useState([{}]);
   const [hashProgress, setHashProgress] = useState(0);
   const [visiblePreviewImg, setVisiblePreviewImg] = useState(false);
-  const offset = 0.01 * 1024 * 1024;
+ 
 
   const changeImg = async (file: File) => {
     // 这里需要判断是否是图片
@@ -295,32 +299,40 @@ const UploadAdd: React.FC<UploadAddProps> = (props) => {
 
     const { dispatch } = props;
     // 请求后端,分开发送请求，
-    for (let index = 0; index < newChunks.length; index += 1) {
-      const form = new FormData();
-      const name = `${hash}-${index}`;
-      const chunk=newChunks[index].file;
-      form.append('name', name);
-      form.append('hash', hash);
-      form.append('chunk', chunk);
-      console.log(form.get("name"),'======');
-      console.log(form,form.get("name"),newChunks[index],'============')
-      dispatch({
-        type: 'upload/fetchCurrent',
-        payload: {
-          form,
-        },
-      });
-    }
-
-    // 并且监听后台传过来的值，如果都成功，给后端一个标志位，告诉这段已经结束了，你可以把这些请求合并了，否则就不发送和并请求
     dispatch({
-      type:'upload/mergeUploadfile',
+      type: 'upload/fetchCurrent',
       payload:{
         hash,
-        ext:fileUrl.name.split('.').pop(),
-        size:offset
+        chunks:newChunks,
+        fileUrl
       }
     })
+    // for (let index = 0; index < newChunks.length; index += 1) {
+    //   const form = new FormData();
+    //   const name = `${hash}-${index}`;
+    //   const chunk=newChunks[index].file;
+    //   form.append('name', name);
+    //   form.append('hash', hash);
+    //   form.append('chunk', chunk);
+    //   console.log(form.get("name"),'======');
+    //   console.log(form,form.get("name"),newChunks[index],'============')
+    //   dispatch({
+    //     type: 'upload/fetchCurrent',
+    //     payload: {
+    //       form,
+    //     },
+    //   });
+    // }
+
+    // 并且监听后台传过来的值，如果都成功，给后端一个标志位，告诉这段已经结束了，你可以把这些请求合并了，否则就不发送和并请求
+    // dispatch({
+    //   type:'upload/mergeUploadfile',
+    //   payload:{
+    //     hash,
+    //     ext:fileUrl.name.split('.').pop(),
+    //     size:offset
+    //   }
+    // })
 
 
   };

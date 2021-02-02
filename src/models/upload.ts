@@ -1,10 +1,62 @@
 import { Effect, Reducer } from 'umi';
 import { notification } from 'antd';
-import { postUpload, postMergeUpload } from '@/services/upload';
+import { postUpload, postMergeUpload, fetchFile } from '@/services/upload';
 import { CHUNK_SIZE } from '@/pages/upload/checkImg';
 
+const mergeRequest = (chunks: any[], limit = 4, errorLimit = 3) => {
+  const len = chunks.length;
+  let count = 0;
+  let isStop = false;
+  return new Promise((resolve, reject) => {
+    // 一个切片task重试失败三次，整体全部终止
+    const start = async () => {
+      if (isStop) {
+        return;
+      }
+      const task = chunks.shift();
+      if (task) {
+        const { form } = task;
+        try {
+         const  res= await postUpload(form);
+         if(res.status_code!==200){
+          if (task.error < errorLimit) {
+            task.error += 1;
+            chunks.unshift(task);
+            start();
+          } else {
+            isStop = true;
+            reject();
+          }
+         }else if (count === len - 1) {
+            resolve({res});
+          } else {
+            count += 1;
+            start();
+          }
+         
+        } catch (error) {
+          if (task.error < errorLimit) {
+            task.error += 1;
+            chunks.unshift(task);
+            start();
+          } else {
+            isStop = true;
+            reject();
+          }
+        }
+      }
+    };
 
-const uploadLogic = (newChunks: any[], hash: File,limit=4,errorLimit=3) => {
+    while (limit > 0) {
+      setTimeout(() => {
+        start();
+      }, 200);
+      limit -= 1;
+    }
+  });
+};
+
+const uploadLogic = (newChunks: any[], hash: File) => {
   const newForm = [];
 
   for (let index = 0; index < newChunks.length; index += 1) {
@@ -14,18 +66,22 @@ const uploadLogic = (newChunks: any[], hash: File,limit=4,errorLimit=3) => {
     form.append('name', name);
     form.append('hash', hash);
     form.append('chunk', chunk);
-    newForm.push(form);
+    newForm.push({
+      form,
+      index,
+      error: 0,
+    });
   }
   return newForm;
 };
 
 export interface CurrentUpload {
-  uploadUrl:string
+  uploadUrl: string;
 }
 
 export interface UploadModelState {
   currentUpload?: CurrentUpload;
-  status: undefined
+  status: undefined;
 }
 
 export interface UploadModelType {
@@ -44,7 +100,7 @@ const UploadModel: UploadModelType = {
   namespace: 'upload',
 
   state: {
-    status:'ok',
+    status: 'ok',
     currentUpload: {},
   },
 
@@ -56,32 +112,53 @@ const UploadModel: UploadModelType = {
     //     payload: response.result||{},
     //   });
     // },
+
+    *checkFile({ payload }, { call, put }) {
+      // 这里要发生并发请求后端
+      const { hash, chunks, fileUrl } = payload;
+      const response = yield call(fetchFile, {
+        hash,
+        ext: fileUrl.name.split('.').pop(),
+      });
+      const { successfull, result } = response;
+      const { isExist } = result;
+      if (isExist) {
+        notification.success({
+          message: '秒传成功',
+        });
+      } else {
+        yield put({
+          type: 'fetchCurrent',
+          payload: {
+            hash,
+            chunks,
+            fileUrl,
+          },
+        });
+      }
+    },
     *fetchCurrent({ payload }, { call, put, take }) {
       // 这里要发生并发请求后端
       const { hash, chunks, fileUrl } = payload;
-      const errorLimit=3;
-      const limit=3;
-      const forms = uploadLogic(chunks, hash,limit,errorLimit);
-
-      // 要全部同时请求
-      const requests = forms.map((item) => call(postUpload, item));
-      const response = yield requests;
-      const responseAllSuccessful = response.every((item: any) => item.successfull);
-      if (responseAllSuccessful) {
+      const errorLimit = 3;
+      const limit = 3;
+      const forms = uploadLogic(chunks, hash);
+      try {
+        yield call(mergeRequest, forms, limit, errorLimit);
         yield put({
           type: 'mergeUploadfile',
           payload: {
-            hash, 
+            hash,
             ext: fileUrl.name.split('.').pop(),
-            size: CHUNK_SIZE
-            },
+            size: CHUNK_SIZE,
+          },
         });
         yield take('mergeUploadfile/@@end');
-      }else {
+      } catch (error) {
         yield put({
           type: 'saveCurrentUpload',
           payload: {
-            successfull:false
+            successfull: false,
           },
         });
       }
@@ -90,39 +167,34 @@ const UploadModel: UploadModelType = {
       const response = yield call(postMergeUpload, payload);
       yield put({
         type: 'saveCurrentUpload',
-        payload: response|| {},
+        payload: response || {},
       });
     },
   },
 
   reducers: {
     saveCurrentUpload(state, action) {
-      const {payload}=action;
-      const {successfull,result}=payload;
-      if(successfull){
-       notification.success({
+      const { payload } = action;
+      const { successfull, result } = payload;
+      if (successfull) {
+        notification.success({
           message: '上传成功',
-        }
-        );
-      }else{
-      notification.error({
-        message: '上传失败',
+        });
+      } else {
+        notification.error({
+          message: '上传失败',
+        });
       }
-     )
-      }
- 
+
       return {
         ...state,
-        status:successfull?'ok':'error',
-        currentUpload:{
-          uploadUrl:successfull?decodeURIComponent(result):'',
+        status: successfull ? 'ok' : 'error',
+        currentUpload: {
+          uploadUrl: successfull ? decodeURIComponent(result) : '',
         },
-
       };
     },
   },
 };
-
-
 
 export default UploadModel;

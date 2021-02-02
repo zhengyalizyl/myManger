@@ -298,15 +298,25 @@ const UploadAdd: React.FC<UploadAddProps> = (props) => {
     console.log(hash, '==============');
 
     const { dispatch } = props;
-    // 请求后端,分开发送请求，
+
+    // 先请求后端是否传过此图片
     dispatch({
-      type: 'upload/fetchCurrent',
+      type: 'upload/checkFile',
       payload:{
         hash,
         chunks:newChunks,
         fileUrl
       }
     })
+    // // 请求后端,分开发送请求，
+    // dispatch({
+    //   type: 'upload/fetchCurrent',
+    //   payload:{
+    //     hash,
+    //     chunks:newChunks,
+    //     fileUrl
+    //   }
+    // })
     // for (let index = 0; index < newChunks.length; index += 1) {
     //   const form = new FormData();
     //   const name = `${hash}-${index}`;
